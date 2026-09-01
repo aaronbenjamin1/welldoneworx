@@ -1,0 +1,364 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/service/",
+      "destination": "/services/",
+      "permanent": true
+    },
+    {
+      "source": "/service/brake-service/",
+      "destination": "/services/brake-service/",
+      "permanent": true
+    },
+    {
+      "source": "/service/standard-maintenance-auto-service/",
+      "destination": "/services/standard-maintenance-auto-service/",
+      "permanent": true
+    },
+    {
+      "source": "/service/engine-auto-service/",
+      "destination": "/services/engine-auto-service/",
+      "permanent": true
+    },
+    {
+      "source": "/service/heating-and-air-conditioner-repair/",
+      "destination": "/services/heating-and-air-conditioner-repair/",
+      "permanent": true
+    },
+    {
+      "source": "/service/auto-electrical-services/",
+      "destination": "/services/auto-electrical-services/",
+      "permanent": true
+    },
+    {
+      "source": "/service/transmission-service/",
+      "destination": "/services/transmission-service/",
+      "permanent": true
+    },
+    {
+      "source": "/service/suspension-service/",
+      "destination": "/services/suspension-service/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-acura/",
+      "destination": "/vehicles-we-service/acura/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-alfa-romeo/",
+      "destination": "/vehicles-we-service/alfa-romeo/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-american-motors/",
+      "destination": "/vehicles-we-service/american-motors/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-audi/",
+      "destination": "/vehicles-we-service/audi/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-austin/",
+      "destination": "/vehicles-we-service/austin/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-bmw/",
+      "destination": "/vehicles-we-service/bmw/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-buick/",
+      "destination": "/vehicles-we-service/buick/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-cadillac/",
+      "destination": "/vehicles-we-service/cadillac/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-checker/",
+      "destination": "/vehicles-we-service/checker/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-chevrolet/",
+      "destination": "/vehicles-we-service/chevrolet/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-chrysler/",
+      "destination": "/vehicles-we-service/chrysler/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-daewoo/",
+      "destination": "/vehicles-we-service/daewoo/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-daihatsu/",
+      "destination": "/vehicles-we-service/daihatsu/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-dodge/",
+      "destination": "/vehicles-we-service/dodge/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-eagle/",
+      "destination": "/vehicles-we-service/eagle/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-fiat/",
+      "destination": "/vehicles-we-service/fiat/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-ford/",
+      "destination": "/vehicles-we-service/ford/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-geo/",
+      "destination": "/vehicles-we-service/geo/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-gmc/",
+      "destination": "/vehicles-we-service/gmc/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-honda/",
+      "destination": "/vehicles-we-service/honda/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-hummers/",
+      "destination": "/vehicles-we-service/hummers/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-hyundai/",
+      "destination": "/vehicles-we-service/hyundai/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-infiniti/",
+      "destination": "/vehicles-we-service/infiniti/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-international/",
+      "destination": "/vehicles-we-service/international/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-isuzu/",
+      "destination": "/vehicles-we-service/isuzu/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-jaguar/",
+      "destination": "/vehicles-we-service/jaguar/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-jeep/",
+      "destination": "/vehicles-we-service/jeep/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-kia/",
+      "destination": "/vehicles-we-service/kia/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-lancia/",
+      "destination": "/vehicles-we-service/lancia/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-land-rover/",
+      "destination": "/vehicles-we-service/land-rover/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-lexus/",
+      "destination": "/vehicles-we-service/lexus/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-lincoln/",
+      "destination": "/vehicles-we-service/lincoln/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-mazda/",
+      "destination": "/vehicles-we-service/mazda/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-mercedes-benz/",
+      "destination": "/vehicles-we-service/mercedes-benz/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-mercury/",
+      "destination": "/vehicles-we-service/mercury/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-merkur/",
+      "destination": "/vehicles-we-service/merkur/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-mg/",
+      "destination": "/vehicles-we-service/mg/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-mini/",
+      "destination": "/vehicles-we-service/mini/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-mitsubishi/",
+      "destination": "/vehicles-we-service/mitsubishi/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-nissan/",
+      "destination": "/vehicles-we-service/nissan/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-oldsmobile/",
+      "destination": "/vehicles-we-service/oldsmobile/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-opel/",
+      "destination": "/vehicles-we-service/opel/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-peugeot/",
+      "destination": "/vehicles-we-service/peugeot/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-plymouth/",
+      "destination": "/vehicles-we-service/plymouth/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-pontiac/",
+      "destination": "/vehicles-we-service/pontiac/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-porsche/",
+      "destination": "/vehicles-we-service/porsche/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-ram/",
+      "destination": "/vehicles-we-service/ram/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-renault/",
+      "destination": "/vehicles-we-service/renault/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-saab/",
+      "destination": "/vehicles-we-service/saab/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-saturn/",
+      "destination": "/vehicles-we-service/saturn/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-scion/",
+      "destination": "/vehicles-we-service/scion/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-smart-cars/",
+      "destination": "/vehicles-we-service/smart-cars/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-sterling/",
+      "destination": "/vehicles-we-service/sterling/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-subaru/",
+      "destination": "/vehicles-we-service/subaru/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-suzuki/",
+      "destination": "/vehicles-we-service/suzuki/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-toyota/",
+      "destination": "/vehicles-we-service/toyota/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-triumph/",
+      "destination": "/vehicles-we-service/triumph/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-volkswagen/",
+      "destination": "/vehicles-we-service/volkswagen/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-volvo/",
+      "destination": "/vehicles-we-service/volvo/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-yugo/",
+      "destination": "/vehicles-we-service/yugo/",
+      "permanent": true
+    },
+    {
+      "source": "/service-repair-zap/",
+      "destination": "/vehicles-we-service/zap/",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "welldoneworx",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Static site for Well Done Worx — European auto repair, Sanger CA",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch --serve",
+    "serve": "node build.mjs --serve"
+  }
+}
