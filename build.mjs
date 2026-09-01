@@ -9,6 +9,7 @@
 
 import { readdir, readFile, writeFile, mkdir, rm, rmdir, copyFile, stat } from 'node:fs/promises';
 import { createServer } from 'node:http';
+import { createHash } from 'node:crypto';
 import { extname, join, dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { watch } from 'node:fs';
@@ -47,6 +48,16 @@ async function build() {
   const { layout } = await import(pathToFileURL(join(SRC, 'templates/layout.js')).href + bust);
   const pages = (await import(pathToFileURL(join(SRC, 'pages.js')).href + bust)).default;
 
+  // Content-hashed CSS/JS filenames. Without these, a cached stylesheet can be
+  // paired with newly deployed HTML and the page renders unstyled until the
+  // cache expires -- which is exactly what happened on the first Vercel deploy.
+  const hashOf = async (f) =>
+    createHash('sha256').update(await readFile(f)).digest('hex').slice(0, 10);
+  const cssHash = await hashOf(join(SRC, 'assets/css/site.css'));
+  const jsHash = await hashOf(join(SRC, 'assets/js/site.js'));
+  const CSS_HREF = `/assets/css/site.${cssHash}.css`;
+  const JS_SRC = `/assets/js/site.${jsHash}.js`;
+
   // Every file this pass produces. Anything already in dist/ and absent from
   // this set is pruned at the end. We deliberately do NOT rm -rf dist/ first:
   // on Windows the dev server holds handles inside it, and a wholesale delete
@@ -64,7 +75,9 @@ async function build() {
 
   // 1. pages
   for (const p of pages) {
-    const html = layout(p);
+    const html = layout(p)
+      .split('/assets/css/site.css').join(CSS_HREF)
+      .split('/assets/js/site.js').join(JS_SRC);
     const file = p.path.endsWith('.html')
       ? join(OUT, p.path)
       : join(OUT, p.path, 'index.html');
@@ -80,6 +93,9 @@ async function build() {
         await copyTree(src, dst);
         continue;
       }
+      // the hashed copies are emitted separately, below
+      if (dst.endsWith(join('assets', 'css', 'site.css')) ||
+          dst.endsWith(join('assets', 'js', 'site.js'))) continue;
       const [a, b] = await Promise.all([stat(src), stat(dst).catch(() => null)]);
       if (!b || b.mtimeMs < a.mtimeMs || b.size !== a.size) {
         await mkdir(dirname(dst), { recursive: true });
@@ -89,6 +105,8 @@ async function build() {
     }
   };
   await copyTree(join(SRC, 'assets'), join(OUT, 'assets'));
+  await emit(join(OUT, 'assets/css', `site.${cssHash}.css`), await readFile(join(SRC, 'assets/css/site.css')));
+  await emit(join(OUT, 'assets/js', `site.${jsHash}.js`), await readFile(join(SRC, 'assets/js/site.js')));
 
   // 3. sitemap.xml
   const today = new Date().toISOString().slice(0, 10);
@@ -147,10 +165,20 @@ async function build() {
         redirects: [...redirects].map(([source, destination]) => ({ source, destination, permanent: true })),
         headers: [
           {
-            // Assets are unhashed, so cache briefly and revalidate in the
-            // background rather than pinning a stale stylesheet for a year.
-            source: '/assets/(.*)',
-            headers: [{ key: 'Cache-Control', value: 'public, max-age=3600, stale-while-revalidate=86400' }],
+            // Everything under css/ and js/ carries a content hash in its
+            // filename, so pinning it is safe: a change produces a new URL.
+            source: '/assets/css/(.*)',
+            headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+          },
+          {
+            source: '/assets/js/(.*)',
+            headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+          },
+          {
+            // Images are not hashed: keep them revalidating so a replaced photo
+            // cannot linger, and so HTML can never outrun its assets again.
+            source: '/assets/img/(.*)',
+            headers: [{ key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' }],
           },
         ],
       },
