@@ -87,7 +87,6 @@ body {
   font-synthesis-weight: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  overflow-x: clip;
   overflow-wrap: break-word;
   -webkit-tap-highlight-color: rgb(228 24 24 / 0.15);
 }
@@ -230,6 +229,7 @@ p { text-wrap: pretty; }
 @media (max-width: 1280px) { .brand-sub { display: none; } }
 @media (max-width: 420px) { .brand-logo { height: 38px; } }
 
+.drawer { display: none; }
 .nav ul { display: flex; align-items: center; gap: clamp(0.35rem, 1.2vw, 1.35rem); }
 .nav a {
   display: flex; align-items: center; min-height: 44px;
@@ -259,30 +259,54 @@ p { text-wrap: pretty; }
 @media (max-width: 900px) {
   .burger { display: flex; }
   .head-cta { display: none; }
-  /* Clipping layer: exactly the viewport, so the panel parked off to the right
-     cannot extend the document. */
-  .nav {
-    position: fixed; inset: 0; z-index: 101;
-    overflow: hidden; pointer-events: none; visibility: hidden;
-  }
-  .nav.is-open { pointer-events: auto; visibility: visible; }
-  .nav ul {
+  .nav-desktop { display: none; }
+
+  /* Above the sticky header (100) and the floating buttons (95). Sitting below
+     the header meant the first link hid behind it, since the header's offset
+     depends on whether the top bar has scrolled away. The panel carries its own
+     close button, so it no longer depends on the burger staying visible. */
+  .drawer { display: block; position: fixed; inset: 0; z-index: 150;
+            /* Clips the panel parked off-canvas so it cannot grow the document. */
+            overflow: hidden;
+            visibility: hidden; pointer-events: none; }
+  .drawer.is-open { visibility: visible; pointer-events: auto; }
+
+  .drawer-scrim { position: absolute; inset: 0; background: rgb(0 0 0 / 0.5);
+                  opacity: 0; transition: opacity 0.24s ease; }
+  .drawer.is-open .drawer-scrim { opacity: 1; }
+
+  .drawer-panel {
     position: absolute; top: 0; right: 0; bottom: 0;
     width: min(340px, 86vw);
-    /* The desktop rule centres items for the horizontal bar; in the column
-       drawer that centres the links and shortens their underlines. */
-    flex-direction: column; align-items: stretch; gap: 0;
+    display: flex; flex-direction: column;
     background: var(--surface); border-left: 1px solid var(--line);
-    padding: calc(var(--head-h) + 1.5rem) 1.5rem 2rem;
+    padding: 1rem 1.5rem 2rem;
+    padding-top: max(1rem, env(safe-area-inset-top));
     transform: translateX(100%); transition: transform 0.24s ease;
-    box-shadow: var(--shadow-lg); overflow-y: auto;
-    overscroll-behavior: contain;
+    overflow-y: auto; overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: var(--shadow-lg);
   }
-  .nav.is-open ul { transform: none; }
-  .nav a { display: flex; align-items: center; min-height: 52px; padding: 0.35rem 0; font-size: 1.05rem; border-bottom: 1px solid var(--line); }
-  .nav a[aria-current="page"] { border-bottom-color: var(--line); }
+  .drawer.is-open .drawer-panel { transform: none; }
+
+  .drawer ul { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+  .drawer a {
+    display: flex; align-items: center; min-height: 52px;
+    font-size: 1.05rem; font-weight: 600; text-decoration: none;
+    color: var(--ink-2); border-bottom: 1px solid var(--line);
+  }
+  .drawer a[aria-current="page"] { color: var(--accent); }
+
+  .drawer-close {
+    align-self: flex-end;
+    display: grid; place-items: center;
+    width: 48px; height: 48px; margin-bottom: 0.5rem;
+    background: none; border: 1px solid var(--line-2); border-radius: var(--r-sm);
+    cursor: pointer;
+  }
+  .drawer-close svg { width: 22px; height: 22px; fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+
   body.nav-open { overflow: hidden; }
-  body.nav-open::after { content: ""; position: fixed; inset: 0; background: rgb(0 0 0 / 0.45); z-index: 99; }
 }
 
 /* footer */

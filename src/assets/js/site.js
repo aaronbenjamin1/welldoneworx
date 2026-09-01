@@ -8,32 +8,35 @@
   /* ---- current year ---------------------------------------------------- */
   $$('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
 
-  /* ---- mobile nav ------------------------------------------------------ */
+  /* ---- mobile drawer --------------------------------------------------- */
+  /* #drawer is a sibling of <header>, not a descendant: nesting a fixed panel
+     inside the sticky header made WebKit clip it to the header box. */
   var burger = $('#burger');
-  var nav = $('#nav');
+  var drawer = $('#drawer');
 
-  function closeNav() {
-    if (!burger) return;
-    burger.setAttribute('aria-expanded', 'false');
-    burger.setAttribute('aria-label', 'Open menu');
-    nav.classList.remove('is-open');
-    document.body.classList.remove('nav-open');
+  function setNav(open) {
+    if (!burger || !drawer) return;
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    drawer.classList.toggle('is-open', open);
+    document.body.classList.toggle('nav-open', open);
+    if (open) {
+      var close = drawer.querySelector('.drawer-close');
+      if (close) close.focus();
+    } else if (document.activeElement && drawer.contains(document.activeElement)) {
+      burger.focus();
+    }
   }
+  var closeNav = function () { setNav(false); };
 
-  if (burger && nav) {
+  if (burger && drawer) {
     burger.addEventListener('click', function () {
-      var open = burger.getAttribute('aria-expanded') === 'true';
-      burger.setAttribute('aria-expanded', String(!open));
-      burger.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
-      nav.classList.toggle('is-open', !open);
-      document.body.classList.toggle('nav-open', !open);
+      setNav(burger.getAttribute('aria-expanded') !== 'true');
     });
-    nav.addEventListener('click', function (e) { if (e.target.closest('a')) closeNav(); });
+    drawer.addEventListener('click', function (e) {
+      if (e.target.closest('a') || e.target.closest('[data-close]')) closeNav();
+    });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeNav(); });
-    document.addEventListener('click', function (e) {
-      if (document.body.classList.contains('nav-open') &&
-          !e.target.closest('#nav') && !e.target.closest('#burger')) closeNav();
-    });
     window.addEventListener('resize', function () { if (window.innerWidth > 900) closeNav(); });
   }
 

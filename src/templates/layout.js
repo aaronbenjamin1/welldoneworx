@@ -118,7 +118,7 @@ function header(current) {
       <span class="brand-sub">${esc(site.tagline)}</span>
     </a>
 
-    <nav class="nav" id="nav" aria-label="Main">
+    <nav class="nav nav-desktop" aria-label="Main">
       <ul>${links}</ul>
     </nav>
 
@@ -127,11 +127,24 @@ function header(current) {
       <a class="btn btn-accent" href="/appointments/">Book service</a>
     </div>
 
-    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="drawer" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
   </div>
-</header>`;
+</header>
+
+<!-- Deliberately a sibling of <header>, not a child. A position:fixed panel
+     nested inside the sticky header gets clipped to the header box in WebKit,
+     which left the mobile menu opening into an empty strip on iOS Safari. -->
+<div class="drawer" id="drawer">
+  <div class="drawer-scrim" data-close></div>
+  <nav class="drawer-panel" aria-label="Mobile navigation">
+    <button class="drawer-close" type="button" data-close aria-label="Close menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <ul>${links}</ul>
+  </nav>
+</div>`;
 }
 
 function footer() {
