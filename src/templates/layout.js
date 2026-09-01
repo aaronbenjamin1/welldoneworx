@@ -1,4 +1,5 @@
 import { site } from '../data/site.js';
+import { serviceAreas } from '../data/seo.js';
 
 // --- small helpers -------------------------------------------------------
 
@@ -270,13 +271,30 @@ export function localBusinessSchema() {
       bestRating: '5',
     },
     sameAs: [site.facebook],
-    areaServed: ['Sanger, CA', 'Fresno, CA', 'Clovis, CA', 'Reedley, CA', 'Parlier, CA', 'Del Rey, CA'],
+    logo: site.origin + site.logo.src,
+    hasMap: site.mapsUrl,
+    paymentAccepted: 'Cash, Visa, Mastercard, American Express, Discover, Check',
+    currenciesAccepted: 'USD',
+    areaServed: serviceAreas.map((t) => ({
+      '@type': 'City',
+      name: `${t}, CA`,
+    })),
+    // The seven service lines, so the shop can surface for each of them.
+    makesOffer: [
+      'Brake Repair',
+      'Oil Change and Scheduled Maintenance',
+      'Engine Repair and Check Engine Light Diagnostics',
+      'Car Air Conditioning Repair',
+      'Auto Electrical Repair',
+      'Transmission Repair',
+      'Suspension and Steering Repair',
+    ].map((n) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: n } })),
   };
 }
 
 // --- the page shell ------------------------------------------------------
 
-export function layout({ path, title, description, body, schema = [], bodyClass = '' }) {
+export function layout({ path, title, description, body, schema = [], bodyClass = '', noindex = false }) {
   const canonical = site.origin + path;
   const fullTitle = path === '/' ? title : `${title} | ${site.name}`;
   const blocks = [localBusinessSchema(), ...schema]
@@ -291,6 +309,7 @@ export function layout({ path, title, description, body, schema = [], bodyClass 
 <title>${esc(fullTitle)}</title>
 <meta name="description" content="${attr(description)}">
 <link rel="canonical" href="${attr(canonical)}">
+${noindex ? '<meta name="robots" content="noindex, follow">' : ''}
 <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 

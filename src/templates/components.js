@@ -1,4 +1,5 @@
 import { site, services, reviews, faqs } from '../data/site.js';
+import { serviceAreas } from '../data/seo.js';
 import { esc, attr, icon, stars, longDate, responsive } from './layout.js';
 
 // --- breadcrumbs ---------------------------------------------------------
@@ -271,6 +272,27 @@ export function section({ id, cls = '', eyebrow, title, lede, body, wrapClass = 
     </div>`
       : ''}
     ${body}
+  </div>
+</section>`;
+}
+
+
+// --- service area --------------------------------------------------------
+
+/** Tells drivers whether we cover them, and carries the geo search phrases. */
+export function serviceArea() {
+  return `
+<section class="sec sec-area">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Service area</p>
+      <h2>Auto repair for Sanger and the wider Fresno area</h2>
+      <p class="lede">We are at ${esc(site.addressLine)}, minutes from downtown Sanger and a short run out from Fresno or Clovis. Drivers regularly come to us from across Fresno County.</p>
+    </div>
+    <ul class="area-list">
+      ${serviceAreas.map((t) => `<li>${icon('pin')}<span>${esc(t)}</span></li>`).join('')}
+    </ul>
+    <p class="muted area-note">Further out than this? Call ${esc(site.phone)} and we will tell you honestly whether the trip is worth it.</p>
   </div>
 </section>`;
 }

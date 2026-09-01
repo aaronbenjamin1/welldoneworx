@@ -829,3 +829,21 @@ p { text-wrap: pretty; }
   .amenities { grid-template-columns: 1fr; }
   .foot-pay img { height: 26px; }
 }
+
+/* Service area ---------------------------------------------------------- */
+
+.sec-area { background: var(--bg-alt); border-block: 1px solid var(--line); }
+.area-list {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 165px), 1fr));
+  gap: 0.6rem;
+}
+.area-list li {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.7rem 0.9rem; font-size: 0.93rem; font-weight: 600;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);
+}
+.area-list .ic { width: 1rem; height: 1rem; color: var(--accent); }
+.area-note { margin-top: 1.25rem; }
+
+/* Lead paragraph on a service page carries the local search phrasing. */
+.detail-intro { font-size: 1.06rem; color: var(--ink) !important; font-weight: 500; }

@@ -1,9 +1,10 @@
 import { site, services, makes, makeGroups, reviews, specials, faqs } from './data/site.js';
+import { pageSeo, serviceSeo, makeSeo, serviceAreas } from './data/seo.js';
 import { esc, attr, icon, stars, longDate, clock, responsive } from './templates/layout.js';
 import {
   breadcrumbs, breadcrumbSchema, pageHead, serviceGrid, serviceCard,
   reviewGrid, reviewCard, reviewSchema, amenities, faqBlock, faqSchema,
-  ctaBand, form, mapEmbed, section,
+  ctaBand, form, mapEmbed, section, serviceArea,
 } from './templates/components.js';
 
 const pages = [];
@@ -26,9 +27,8 @@ const MAKE_PHOTO = {
 
 add({
   path: '/',
-  title: 'European Auto Repair in Sanger, CA | Well Done Worx',
-  description:
-    'Independent European auto repair in Sanger, CA. MINI, BMW, Audi and Porsche specialists servicing all makes. Honest diagnosis, written estimates, 5.0 stars from 40 verified reviews. Call (559) 801-3460.',
+  title: pageSeo['/'].title,
+  description: pageSeo['/'].desc,
   bodyClass: 'is-home',
   body: `
 <section class="hero">
@@ -175,6 +175,8 @@ ${section({
   </div>
 </section>
 
+${serviceArea()}
+
 ${section({
   cls: 'sec-faq',
   eyebrow: 'Questions',
@@ -195,9 +197,8 @@ const svcTrail = [{ label: 'Home', href: '/' }, { label: 'Services', href: '/ser
 
 add({
   path: '/services/',
-  title: 'Auto Repair Services in Sanger, CA',
-  description:
-    'Brakes, engine diagnostics, heating and A/C, electrical, transmission, suspension and factory scheduled maintenance in Sanger, CA. European specialists servicing all makes.',
+  title: pageSeo['/services/'].title,
+  description: pageSeo['/services/'].desc,
   body:
     breadcrumbs(svcTrail) +
     pageHead({
@@ -220,6 +221,7 @@ add({
         ${amenities()}
       </div>`,
     }) +
+    serviceArea() +
     section({ cls: 'sec-faq', eyebrow: 'Questions', title: 'Before you book', body: faqBlock() }) +
     ctaBand(),
   schema: [breadcrumbSchema(svcTrail), faqSchema()],
@@ -233,23 +235,26 @@ for (const s of services) {
   const trail = [...svcTrail, { label: s.title, href: `/services/${s.slug}/` }];
   const related = services.filter((x) => x.slug !== s.slug).slice(0, 3);
 
+  const seo = serviceSeo[s.slug];
+
   add({
     path: `/services/${s.slug}/`,
-    title: `${s.title} in Sanger, CA`,
-    description: `${s.short} ${site.name} in Sanger, CA. Written estimates, factory-level diagnostics, all makes serviced. Call ${site.phone}.`,
+    title: seo.title,
+    description: seo.desc,
     body:
       breadcrumbs(trail) +
       pageHead({
         eyebrow: 'Service',
-        title: esc(s.title),
+        title: esc(seo.h1),
         lede: esc(s.lede),
         image: s.banner,
-        imageAlt: '',
+        imageAlt: `${s.title} at ${site.name} in Sanger, CA`,
       }) +
       `
 <section class="sec sec-detail">
   <div class="wrap detail-grid">
     <article class="detail-body">
+      <p class="detail-intro">${esc(seo.intro)}</p>
       ${s.body.map((p) => `<p>${esc(p)}</p>`).join('')}
       ${s.photo ? `<img class="detail-photo" src="${attr(s.photo)}" alt="" loading="lazy" decoding="async">` : ''}
 
@@ -285,6 +290,8 @@ ${section({
   body: `<div class="grid grid-svc">${related.map(serviceCard).join('')}</div>`,
 })}
 
+${serviceArea()}
+
 ${ctaBand({ title: `Need ${s.title.toLowerCase()}?`, text: 'Request a time online or call the shop. We will confirm and let you know whether it is a wait-for-it or a drop-off job.' })}`,
     schema: [
       breadcrumbSchema(trail),
@@ -317,8 +324,8 @@ const vehTrail = [{ label: 'Home', href: '/' }, { label: 'Vehicles we service', 
 
 add({
   path: '/vehicles-we-service/',
-  title: 'Vehicles We Service',
-  description: `${site.name} services ${makes.length} makes in Sanger, CA, from MINI, BMW, Audi and Porsche to everyday domestic and import vehicles. Find your make and book a visit.`,
+  title: pageSeo['/vehicles-we-service/'].title,
+  description: pageSeo['/vehicles-we-service/'].desc,
   body:
     breadcrumbs(vehTrail) +
     pageHead({
@@ -366,17 +373,20 @@ for (const m of makes) {
   const note = m.note || genericNote(m.name);
   const groupLabel = makeGroups.find((g) => g.key === m.group).label;
 
+  const mseo = makeSeo(m);
+
   add({
     path: `/vehicles-we-service/${m.slug}/`,
-    title: `${m.name} Repair & Service in Sanger, CA`,
-    description: `${m.name} repair and maintenance at ${site.name} in Sanger, CA. Brakes, engine diagnostics, A/C, electrical, transmission and suspension. Written estimates. Call ${site.phone}.`,
+    title: mseo.title,
+    description: mseo.desc,
     body:
       breadcrumbs(trail) +
       pageHead({
         eyebrow: `${esc(groupLabel)}${m.featured ? ' &middot; Speciality marque' : ''}`,
-        title: `${esc(m.name)} repair &amp; service in Sanger`,
-        lede: esc(note),
+        title: esc(mseo.h1),
+        lede: esc(mseo.intro),
         image: MAKE_PHOTO[m.slug],
+        imageAlt: `${m.name} serviced at ${site.name} in Sanger, CA`,
         actions: `<a class="btn btn-accent btn-lg" href="/appointments/?vehicle=${encodeURIComponent(m.name)}">Book ${esc(m.name)} service</a>
                   <a class="btn btn-outline btn-lg" href="${attr(site.phoneHref)}">${icon('phone')}${esc(site.phone)}</a>`,
       }) +
@@ -384,6 +394,7 @@ for (const m of makes) {
         cls: 'sec-tight',
         eyebrow: 'Services',
         title: `What we do for ${esc(m.name)} owners`,
+        lede: esc(note),
         body: serviceGrid(),
       }) +
       section({
@@ -401,6 +412,7 @@ for (const m of makes) {
           ${amenities()}
         </div>`,
       }) +
+      serviceArea() +
       ctaBand({
         title: `${m.name} service in Sanger, CA`,
         text: `We are at ${site.addressLine}, open Monday to Friday 8:00am to 4:30pm.`,
@@ -427,8 +439,8 @@ const apptTrail = [{ label: 'Home', href: '/' }, { label: 'Appointments', href: 
 
 add({
   path: '/appointments/',
-  title: 'Request an Appointment',
-  description: `Request an auto repair appointment at ${site.name} in Sanger, CA. Tell us the vehicle and the symptom and we will confirm a time. Quotes welcome. Call ${site.phone}.`,
+  title: pageSeo['/appointments/'].title,
+  description: pageSeo['/appointments/'].desc,
   body:
     breadcrumbs(apptTrail) +
     pageHead({
@@ -476,8 +488,8 @@ const specTrail = [{ label: 'Home', href: '/' }, { label: 'Specials', href: '/sp
 
 add({
   path: '/specials/',
-  title: 'Auto Repair Specials & Coupons',
-  description: `Current auto repair specials at ${site.name} in Sanger, CA, including brake service from $199.99 per axle and up to 90% off eligible A/C repairs through the California Cool Air Rebate Program.`,
+  title: pageSeo['/specials/'].title,
+  description: pageSeo['/specials/'].desc,
   body:
     breadcrumbs(specTrail) +
     pageHead({
@@ -546,9 +558,8 @@ const rebateSteps = [
 
 add({
   path: '/rebates/',
-  title: 'California Cool Air Rebate Program',
-  description:
-    'The California Cool Air Rebate Program pays up to 90% of eligible vehicle A/C leak repairs. Well Done Worx in Sanger, CA is a participating shop. See the steps and check if you qualify.',
+  title: pageSeo['/rebates/'].title,
+  description: pageSeo['/rebates/'].desc,
   body:
     breadcrumbs(rebTrail) +
     pageHead({
@@ -599,8 +610,8 @@ const revTrail = [{ label: 'Home', href: '/' }, { label: 'Reviews', href: '/revi
 
 add({
   path: '/reviews/',
-  title: 'Customer Reviews',
-  description: `${site.rating.value} stars from ${site.rating.count} verified customer reviews of ${site.name} in Sanger, CA. Read what drivers say about our European auto repair and diagnostics.`,
+  title: pageSeo['/reviews/'].title,
+  description: pageSeo['/reviews/'].desc,
   body:
     breadcrumbs(revTrail) +
     pageHead({
@@ -633,8 +644,8 @@ const conTrail = [{ label: 'Home', href: '/' }, { label: 'Contact', href: '/cont
 
 add({
   path: '/contact/',
-  title: 'Contact & Directions',
-  description: `Contact ${site.name} at ${site.addressLine}. Call ${site.phone} or send a message. Open Monday to Friday, 8:00am to 4:30pm.`,
+  title: pageSeo['/contact/'].title,
+  description: pageSeo['/contact/'].desc,
   body:
     breadcrumbs(conTrail) +
     pageHead({
@@ -687,8 +698,8 @@ ${ctaBand()}`,
 
 add({
   path: '/privacy-policy/',
-  title: 'Privacy Policy',
-  description: `How ${site.name} collects, uses and protects the information you provide through this website.`,
+  title: pageSeo['/privacy-policy/'].title,
+  description: pageSeo['/privacy-policy/'].desc,
   body:
     breadcrumbs([{ label: 'Home', href: '/' }, { label: 'Privacy policy', href: '/privacy-policy/' }]) +
     pageHead({ eyebrow: 'Legal', title: 'Privacy policy', lede: `Last updated <time datetime="2026-09-01">September 1, 2026</time>.` }) +
@@ -724,8 +735,8 @@ add({
 
 add({
   path: '/sitemap/',
-  title: 'Site Map',
-  description: `Every page on the ${site.name} website, in one list.`,
+  title: pageSeo['/sitemap/'].title,
+  description: pageSeo['/sitemap/'].desc,
   body:
     breadcrumbs([{ label: 'Home', href: '/' }, { label: 'Site map', href: '/sitemap/' }]) +
     pageHead({ eyebrow: 'Navigation', title: 'Site map' }) +

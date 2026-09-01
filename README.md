@@ -139,6 +139,48 @@ which would have sat underneath the call button.
 To make the call button mobile-only, wrap `.fab-call` in `@media (max-width: 900px)` in
 `site.css`.
 
+## Local SEO
+
+`src/data/seo.js` holds the local keyword layer: the literal phrases people around
+Sanger type into Google, mapped to the page that should rank for each. Titles, meta
+descriptions, H1s and the lead paragraph of every service and vehicle page are generated
+from it, so the phrasing lives in one file rather than scattered through markup.
+
+Targets by page:
+
+| Page | Primary phrase |
+|---|---|
+| Home | european auto repair in Sanger, CA |
+| /services/brake-service/ | brake repair in Sanger, CA · brake service near Fresno |
+| /services/standard-maintenance-auto-service/ | oil change in Sanger, CA · car maintenance in Sanger |
+| /services/engine-auto-service/ | check engine light diagnostics in Sanger, CA |
+| /services/heating-and-air-conditioner-repair/ | car AC repair in Sanger, CA |
+| /services/auto-electrical-services/ | auto electrical repair in Sanger, CA |
+| /services/transmission-service/ | transmission repair in Sanger, CA |
+| /services/suspension-service/ | suspension repair in Sanger, CA |
+| /vehicles-we-service/<make>/ | <Make> repair in Sanger, CA |
+
+Every page also carries a service-area block naming the twelve towns in the catchment
+(Sanger, Fresno, Clovis, Reedley, Parlier, Del Rey, Selma, Fowler, Kingsburg, Centerville,
+Minkler, Squaw Valley), which is genuinely useful to a driver deciding whether to make the
+trip as well as being the geo signal.
+
+Technical state, all verified by script:
+
+- Every one of the 79 pages has exactly one `h1`, a title, a meta description and schema
+- Titles are all under 60 rendered characters; descriptions sit between 134 and 147, so
+  neither truncates in results. Before this pass, 73 descriptions were over 165
+- `AutoRepair` schema now carries logo, `hasMap`, `paymentAccepted`, `areaServed` as
+  twelve City objects, and `makesOffer` for the seven service lines
+- The 404 page is `noindex, follow`
+
+**A caveat worth stating plainly:** on-page keywords are the smallest of the three levers
+for local search. What actually decides whether this shop appears in the Google map pack
+is the Google Business Profile (categories, hours, photos, service list), review volume
+and recency, and NAP consistency across directories. The site now supports those; it
+cannot substitute for them. If you want the biggest single win, it is getting the Business
+Profile fully filled out and pointing it at these service URLs.
+
 ## Before going live
 
 1. **Reviews** — `reviews` in `src/data/site.js` is a hand-entered sample. Point it at the
